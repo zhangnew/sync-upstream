@@ -1,25 +1,33 @@
-name: "Merge Upstream"
-description: "Merge changes from the uppstream repo you had forked from."
-author: "eXions"
+name: "Sync Upstream"
+description: "Sync changes from the uppstream repo you had forked from."
+author: "zhangnew"
 branding:
   icon: git-merge
-  color: black
+  color: green
 
 inputs:
+  username:
+    description: "User name - required for git commits"
+    default: "sync-upstream-bot"
+  useremail:
+    description: "User email - required for git commits"
+    default: "bot@github.com"
   upstream:
-    description: 'Upstream repository owner/name. For example, exions/merge-upstream'
+    description: "Upstream repository owner/name. For example, zhangnew/sync-upstream"
+    default: "master"
     required: true
   upstream-branch:
-    description: 'Upstream branch to merge from. For example, master'
-    default: 'master'
+    description: "Upstream branch to merge from. For example, master"
+    default: "master"
+    required: true
   branch:
-    description: 'Branch to merge to. For example, master'
-    default: 'master'
+    description: "Branch to merge to. For example, master"
+    default: "master"
+    required: true
   token:
     description: >
       Personal access token (PAT) used to fetch the repository. The PAT is configured
-      with the local git config, which enables your scripts to run authenticated git
-      commands. The post-job step removes the PAT.
+      with the local git config, which enables your scripts to run authenticated git commands. The post-job step removes the PAT.
       We recommend using a service account with the least permissions necessary.
       Also when generating a new PAT, select the least scopes necessary.
       [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
@@ -27,13 +35,17 @@ inputs:
 
 runs:
   using: "composite"
-  steps: 
-    - run: | 
+  steps:
+    - run: |
+        set -x
         git remote add -f upstream "https://github.com/${{ inputs.upstream }}.git"
         git remote -v
         git branch --all
+        git config user.email "${{ inputs.useremail }}"
+        git config user.name "${{ inputs.username }}"
         git config --list
         git checkout ${{ inputs.branch }}
-        git merge --ff-only upstream/${{ inputs.upstream-branch }}
-        git push 
+        git rebase upstream/${{ inputs.upstream-branch }}
+        git pull --rebase
+        git push
       shell: bash
