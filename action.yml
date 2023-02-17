@@ -1,13 +1,13 @@
-name: "Merge Upstream"
-description: "Merge changes from the uppstream repo you had forked from."
-author: "eXions"
+name: "Sync Upstream"
+description: "Sync changes from the uppstream repo you had forked from."
+author: "zhangnew"
 branding:
   icon: git-merge
   color: black
 
 inputs:
   upstream:
-    description: 'Upstream repository owner/name. For example, exions/merge-upstream'
+    description: 'Upstream repository owner/name. For example, zhangnew/sync-upstream'
     required: true
   upstream-branch:
     description: 'Upstream branch to merge from. For example, master'
@@ -29,11 +29,14 @@ runs:
   using: "composite"
   steps: 
     - run: | 
+        set -x
         git remote add -f upstream "https://github.com/${{ inputs.upstream }}.git"
         git remote -v
         git branch --all
         git config --list
         git checkout ${{ inputs.branch }}
-        git merge --ff-only upstream/${{ inputs.upstream-branch }}
+        git rebase upstream/${{ inputs.upstream-branch }}
+        git pull --rebase
         git push 
       shell: bash
+

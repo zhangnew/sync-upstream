@@ -4,7 +4,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   release:
@@ -17,7 +17,7 @@ jobs:
       release-version-minor: ${{ steps.release.outputs.release-version-minor }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: release
         name: semantic-release
         uses: ahmadnassri/action-semantic-release@v1
@@ -45,3 +45,4 @@ jobs:
             }
             await github.git.deleteRef({ ...repo, ref: tag }).catch(() => {})
             await github.git.createRef({ ...repo, ref: `refs/${tag}` , sha: process.env.GITHUB_SHA })
+
