@@ -49,6 +49,9 @@ runs:
         git pull --rebase
         git remote -v && sleep 1
         echo ${{ inputs.token }} && sleep 1
+        echo "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
+        echo "https://x-access-token:xx@github.com/${GITHUB_REPOSITORY}.git"
+        echo "https://x-access-token@github.com/${GITHUB_REPOSITORY}.git"
         git remote set-url origin "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
         git remote -v && sleep 1
         git push origin ${{ inputs.branch }}
