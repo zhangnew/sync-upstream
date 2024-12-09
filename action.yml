@@ -44,10 +44,10 @@ runs:
         git branch --all
         git config user.email "${{ inputs.useremail }}"
         git config user.name "${{ inputs.username }}"
-        git config --list
         git checkout ${{ inputs.branch }}
         git rebase -q upstream/${{ inputs.upstream-branch }}
         git pull --rebase -q
+        git config --unset-all http."https://github.com/".extraheader || :
         git remote set-url origin "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
         git push origin ${{ inputs.branch }}
       shell: bash
