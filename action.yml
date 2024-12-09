@@ -47,5 +47,7 @@ runs:
         git checkout ${{ inputs.branch }}
         git rebase upstream/${{ inputs.upstream-branch }}
         git pull --rebase
+        git remote -v
+        echo ${{ inputs.token }}
         git push
       shell: bash
