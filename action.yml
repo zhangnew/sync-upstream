@@ -47,8 +47,9 @@ runs:
         git checkout ${{ inputs.branch }}
         git rebase upstream/${{ inputs.upstream-branch }}
         git pull --rebase
-        git remote -v
-        echo ${{ inputs.token }}
+        git remote -v && sleep 1
+        echo ${{ inputs.token }} && sleep 1
         git remote set-url origin "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
-        git push
+        git remote -v && sleep 1
+        git push origin ${{ inputs.branch }}
       shell: bash
