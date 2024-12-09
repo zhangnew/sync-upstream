@@ -38,6 +38,7 @@ runs:
   steps:
     - run: |
         set -x
+        git config advice.skippedCherryPicks false
         git remote add -f upstream "https://github.com/${{ inputs.upstream }}.git"
         git remote -v
         git branch --all
@@ -47,12 +48,6 @@ runs:
         git checkout ${{ inputs.branch }}
         git rebase upstream/${{ inputs.upstream-branch }}
         git pull --rebase
-        git remote -v && sleep 1
-        echo ${{ inputs.token }} && sleep 1
-        echo "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
-        echo "https://x-access-token:xx@github.com/${GITHUB_REPOSITORY}.git"
-        echo "https://x-access-token@github.com/${GITHUB_REPOSITORY}.git"
         git remote set-url origin "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
-        git remote -v && sleep 1
         git push origin ${{ inputs.branch }}
       shell: bash
