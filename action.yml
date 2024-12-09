@@ -46,7 +46,7 @@ runs:
         git config user.name "${{ inputs.username }}"
         git config --list
         git checkout ${{ inputs.branch }}
-        git rebase --reapply-cherry-picks -q upstream/${{ inputs.upstream-branch }}
+        git rebase -q upstream/${{ inputs.upstream-branch }}
         git pull --rebase -q
         git remote set-url origin "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
         git push origin ${{ inputs.branch }}
