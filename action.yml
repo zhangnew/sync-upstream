@@ -38,14 +38,16 @@ runs:
   steps:
     - run: |
         set -x
+        git config advice.skippedCherryPicks false
         git remote add -f upstream "https://github.com/${{ inputs.upstream }}.git"
         git remote -v
         git branch --all
         git config user.email "${{ inputs.useremail }}"
         git config user.name "${{ inputs.username }}"
-        git config --list
         git checkout ${{ inputs.branch }}
-        git rebase upstream/${{ inputs.upstream-branch }}
-        git pull --rebase
-        git push
+        git rebase -q upstream/${{ inputs.upstream-branch }}
+        git pull --rebase -q
+        git config --unset-all http."https://github.com/".extraheader || :
+        git remote set-url origin "https://x-access-token:${{ inputs.token }}@github.com/${GITHUB_REPOSITORY}.git"
+        git push origin ${{ inputs.branch }}
       shell: bash
